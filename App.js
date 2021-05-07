@@ -12,9 +12,9 @@ const App = () => {
 	return (
 		<NavigationContainer>
 			<Stack.Navigator>
-				<Stack.Screen name="Home" component={MoviesList} />
-				<Stack.Screen name="CreateMovie" component={CreateMovie} />
-				<Stack.Screen name="DisplayMovie" component={DisplayMovie} />
+				<Stack.Screen name="My movies" component={MoviesList} />
+				<Stack.Screen name="New movie" component={CreateMovie} />
+				<Stack.Screen name="Movie" component={DisplayMovie} />
 			</Stack.Navigator>
 		</NavigationContainer>
 	);
