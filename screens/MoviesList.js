@@ -4,6 +4,7 @@ import { Icon } from 'react-native-elements'
 
 import MovieCard from '../components/MovieCard'
 import Movie from '../models/Movie'
+import CustomButton from './../components/CustomButton';
 
 const MoviesList = ({ navigation }) => {
 	const [movies, setMovies] = useState([])
@@ -24,12 +25,10 @@ const MoviesList = ({ navigation }) => {
 					<Text style={styles.noMoviesText}>
 						No movies yet...
 					</Text>
-					<TouchableOpacity
-						style={styles.noMoviesButton}
+					<CustomButton
+						label="Create one"
 						onPress={() => navigation.navigate('CreateMovie')}
-					>
-						<Text style={styles.noMoviesButtonText}>Create one</Text>
-					</TouchableOpacity>
+					/>
 				</View>
 			}
 			<TouchableOpacity
@@ -55,21 +54,6 @@ const styles = StyleSheet.create({
 
 	noMoviesText: {
 		fontSize: 18
-	},
-
-	noMoviesButton: {
-		backgroundColor: 'black',
-		paddingHorizontal: 25,
-		paddingVertical: 15,
-		width: '70%',
-		marginTop: 20,
-		borderRadius: 5
-	},
-
-	noMoviesButtonText: {
-		fontSize: 18,
-		color: 'white',
-		textAlign: 'center'
 	},
 
 	addMovieButtonContainer: {
