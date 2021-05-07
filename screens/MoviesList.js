@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList } from 'react-native'
+import { FlatList, SafeAreaView } from 'react-native'
 
 import MovieCard from '../components/MovieCard'
 import Movie from '../models/Movie'
@@ -12,25 +12,26 @@ const MoviesList = () => {
 		OMBdAPI.getMovieByName('avatar')
 			.then(res => setMovies([
 				...movies,
-				new Movie(res.Title, res.imdbRating, res.poster)
+				new Movie(res.data.imdbID, res.data.Title, res.data.imdbRating, res.data.Poster)
 			]))
 		OMBdAPI.getMovieByName('baby_driver')
 			.then(res => setMovies([
 				...movies,
-				new Movie(res.Title, res.imdbRating, res.poster)
+				new Movie(res.data.imdbID, res.data.Title, res.data.imdbRating, res.data.Poster)
 			]))
 	}, [])
 
-	const renderMovie = ({ movie }) => (
-		<MovieCard title={movie.title} rating={movie.rating} />
-	)
-
+	const renderMovie = ({ item }) => {
+		return <MovieCard title={item.title} rating={item.rating} />
+	}
 	return (
-		<FlatList
-			data={movies}
-			renderItem={renderMovie}
-			keyExtractor={movie => movie.imdbID}
-		/>
+		<SafeAreaView>
+			<FlatList
+				data={movies}
+				renderItem={renderMovie}
+				keyExtractor={item => item.id}
+			/>
+		</SafeAreaView>
 	)
 }
 
