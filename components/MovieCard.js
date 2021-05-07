@@ -1,13 +1,39 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { StyleSheet, View, Text } from 'react-native'
 
-const Movie = ({ title, image, rating}) => {
+const MovieCard = ({ title, rating, image }) => {
   return (
-	  <View>
-		  <Text>{ title }</Text>
-		  <Text>{ rating }</Text>
-	  </View>
+		<View style={styles.card}>
+			<Text style={styles.title}>{ title }</Text>
+			<Text style={styles.rating}>{ rating }</Text>
+		</View>
   )
 }
 
-export default Movie
+const styles = StyleSheet.create({
+	card: {
+		padding: 10,
+		backgroundColor: 'white',
+		marginHorizontal: 10,
+		marginVertical: 5,
+		shadowColor: "#000",
+		shadowOffset: {
+			width: 0,
+			height: 1,
+		},
+		shadowOpacity: 0.22,
+		shadowRadius: 2.22,
+
+		elevation: 3,
+	},
+
+	title: {
+		fontSize: 18
+	},
+
+	rating: {
+		fontSize: 16
+	}
+})
+
+export default MovieCard
