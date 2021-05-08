@@ -1,8 +1,13 @@
 export default class Movie {
-	constructor(imbdId, title, rating, image) {
-		this.id     = imbdId
-		this.title  = title
-		this.rating = rating
-		this.image  = image
+	static lastId = 0
+
+	constructor(title, posterURI, summary, comments, rating, imdbLink) {
+		this.id        = Movie.lastId++
+		this.title     = title
+		this.posterURI = posterURI
+		this.summary   = summary
+		this.comments  = comments
+		this.rating    = rating
+		this.imdbLink  = imdbLink
 	}
 }

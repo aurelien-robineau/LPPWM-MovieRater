@@ -1,24 +1,60 @@
 import React, { useState } from 'react'
-import { StyleSheet, View, TextInput, Text, ScrollView, TouchableOpacity } from 'react-native'
+import { StyleSheet, View, TextInput, Text, ScrollView, TouchableOpacity, Image } from 'react-native'
 import { Icon } from 'react-native-elements'
 import * as DocumentPicker from 'expo-document-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import CustomButton from '../components/CustomButton'
+import Movie from '../models/Movie'
+import RatingInput from '../components/RatingInput';
 
 const CreateMovie = () => {
 	const [title, setTitle] = useState(null)
 	const [poster, setPoster] = useState(null)
 	const [summary, setSummary] = useState(null)
 	const [comments, setComments] = useState(null)
-	const [rating, setRating] = useState(null)
+	const [rating, setRating] = useState(0)
 	const [imdbLink, setImdbLink] = useState(null)
+
+	const [posterError, setPosterError] = useState(null)
 
 	const selectPoster = async () => {
 		const res = await DocumentPicker.getDocumentAsync({
-			type: '*/*',
+			type: 'image/*',
 		})
 
-		console.log(res)
+		if (res.type === 'success') {
+			setPoster(res.uri)
+		}
+		else if (res.type !== 'cancel') {
+			setPosterError("Can't load the image")
+		}
+	}
+
+	const saveMovie = async () => {
+		let movies = []
+		const movie = new Movie(
+			title,
+			poster,
+			summary,
+			comments,
+			rating,
+			imdbLink
+		)
+
+		try {
+			const value = await AsyncStorage.getItem('@movies')
+			movies = value ? JSON.parse(value) : []
+		} catch(e) {
+			movies = []
+		}
+
+		try {
+			movies.push(movie)
+			await AsyncStorage.setItem('@movies', JSON.stringify(movies))
+		} catch (e) {
+			console.log(e)
+		}
 	}
 
 	return (
@@ -34,12 +70,21 @@ const CreateMovie = () => {
 
 			<View>
 				<Text style={styles.label}>Poster image</Text>
-				<TouchableOpacity
-					style={styles.fileInputButton}
-					onPress={selectPoster}
-				>
-					<Icon name="description" color="black"/>
-				</TouchableOpacity>
+				{poster ?
+					<TouchableOpacity onPress={selectPoster}>
+						<Image style={styles.poster} source={{ uri: poster }} />
+					</TouchableOpacity>
+					:
+					<TouchableOpacity
+						style={styles.fileInputButton}
+						onPress={selectPoster}
+					>
+						<Icon name="description" color="black"/>
+					</TouchableOpacity>
+				}
+				{posterError &&
+					<Text style={styles.inputError}>{posterError}</Text>
+				}
 			</View>
 
 			<View style={styles.formGroup}>
@@ -65,6 +110,11 @@ const CreateMovie = () => {
 			</View>
 
 			<View style={styles.formGroup}>
+				<Text style={styles.label}>Rating</Text>
+				<RatingInput iconSize={45} onChange={setRating} />
+			</View>
+
+			<View style={styles.formGroup}>
 				<Text style={styles.label}>IMDB link</Text>
 				<TextInput
 					style={styles.input}
@@ -76,6 +126,7 @@ const CreateMovie = () => {
 			<View style={styles.createButtonContainer}>
 				<CustomButton
 					label="Create"
+					onPress={saveMovie}
 				/>
 			</View>
 		</ScrollView>
@@ -103,6 +154,16 @@ const styles = StyleSheet.create({
 		paddingVertical: 18,
 		fontSize: 18,
 		marginBottom: 10
+	},
+
+	inputError: {
+		fontSize: 16,
+		color: 'red'
+	},
+
+	poster: {
+		height: 200,
+		width: '100%'
 	},
 
 	fileInputButton: {

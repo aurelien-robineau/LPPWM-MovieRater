@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, FlatList, SafeAreaView, Text, TouchableOpacity, View, StatusBar, Dimensions } from 'react-native'
 import { Icon } from 'react-native-elements'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import MovieCard from '../components/MovieCard'
 import Movie from '../models/Movie'
@@ -9,9 +10,32 @@ import CustomButton from './../components/CustomButton';
 const MoviesList = ({ navigation }) => {
 	const [movies, setMovies] = useState([])
 
+	useEffect(() => {
+		const loadMovies = async () => {
+			try {
+				const value = await AsyncStorage.getItem('@movies')
+				if (value) {
+					setMovies(JSON.parse(value).map(movie => new Movie(
+						movie.title,
+						movie.posterURI,
+						movie.summary,
+						movie.comments,
+						movie.rating,
+						movie.imdbLink
+					)))
+				}
+			} catch(e) {
+				setMovies([])
+			}
+		}
+
+		loadMovies()
+	}, [])
+
 	const renderMovie = ({ item }) => {
-		return <MovieCard title={item.title} rating={item.rating} />
+		return <MovieCard movie={item} />
 	}
+
 	return (
 		<SafeAreaView style={styles.container}>
 			{ movies.length ?
