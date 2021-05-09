@@ -2,7 +2,7 @@ import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Icon } from 'react-native-elements'
 
-const RatingInput = ({ iconSize, value = 0 }) => {
+const RatingView = ({ iconSize, value = 0 }) => {
 	return (
 		<View style={styles.ratingContainer}>
 			<Icon
@@ -41,11 +41,11 @@ const RatingInput = ({ iconSize, value = 0 }) => {
 
 const styles = StyleSheet.create({
 	ratingContainer: {
-		flex: 1,
+		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
-		justifyContent: 'space-around'
+		justifyContent: 'space-between'
 	}
 })
 
-export default RatingInput
+export default RatingView
