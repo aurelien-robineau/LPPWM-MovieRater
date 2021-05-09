@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text } from 'react-native'
+import { StyleSheet, View, Text, Image } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+
+import Movie from './../models/Movie';
 
 const DisplayMovie = ({ route }) => {
 	const [movie, setMovie] = useState(null)
@@ -10,6 +12,7 @@ const DisplayMovie = ({ route }) => {
 	}, [])
 
 	const loadMovie = async () => {
+		let movies = []
 		try {
 			const value = await AsyncStorage.getItem('@movies')
 			movies = value ? JSON.parse(value) : []
@@ -17,14 +20,25 @@ const DisplayMovie = ({ route }) => {
 			movies = []
 		}
 
-		setMovie(movies.filter(mov => mov.id === route.params.id)[0] ?? null)
+		const JSONMovie = movies.filter(mov => mov.id === route.params.id)[0] ?? null
+
+		if (JSONMovie) {
+			setMovie(Movie.createFromJSON(JSONMovie))
+		}
 	}
 
 	return movie && (
 		<View>
-			<Text>{movie.title}</Text>
+			<Image style={styles.poster} source={{ uri: movie.posterURI }}/>
 		</View>
 	)
 }
+
+const styles = StyleSheet.create({
+	poster: {
+		width: '100%',
+		height: 225
+	}
+})
 
 export default DisplayMovie

@@ -15,14 +15,7 @@ const MoviesList = ({ navigation }) => {
 			try {
 				const value = await AsyncStorage.getItem('@movies')
 				if (value) {
-					setMovies(JSON.parse(value).map(movie => new Movie(
-						movie.title,
-						movie.posterURI,
-						movie.summary,
-						movie.comments,
-						movie.rating,
-						movie.imdbLink
-					)))
+					setMovies(JSON.parse(value).map(movie => Movie.createFromJSON(movie)))
 				}
 			} catch(e) {
 				setMovies([])
