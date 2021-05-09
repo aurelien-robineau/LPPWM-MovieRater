@@ -1,17 +1,20 @@
 import React from 'react'
-import { StyleSheet, View, Text, Image } from 'react-native'
+import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native'
 
 import RatingInput from './RatingInput'
 
-const MovieCard = ({ movie }) => {
+const MovieCard = ({ movie, onPress }) => {
   return (
-		<View style={styles.card}>
+		<TouchableOpacity
+			style={styles.card}
+			onPress={() => onPress(movie.id)}
+		>
 			<Image style={styles.image} source={{ uri: movie.posterURI }}/>
 			<View style={styles.movieInfo}>
 				<Text style={styles.title}>{ movie.title }</Text>
 				<RatingInput iconSize={30} value={movie.rating} disabled />
 			</View>
-		</View>
+		</TouchableOpacity>
   )
 }
 

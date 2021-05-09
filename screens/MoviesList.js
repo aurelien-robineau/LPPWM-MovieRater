@@ -33,7 +33,12 @@ const MoviesList = ({ navigation }) => {
 	}, [])
 
 	const renderMovie = ({ item }) => {
-		return <MovieCard movie={item} />
+		return (
+			<MovieCard
+				movie={item}
+				onPress={() => navigation.navigate('DisplayMovie', { name: item.title, id: item.id })}
+			/>
+		)
 	}
 
 	return (

@@ -23,9 +23,9 @@ const App = () => {
 					options={{ title: 'New movie' }}
 				/>
 				<Stack.Screen
-					name="ShowMovie"
+					name="DisplayMovie"
 					component={DisplayMovie}
-					options={{ title: 'Movie' }}
+					options={({ route }) => ({ title: route.params.name })}
 				/>
 			</Stack.Navigator>
 		</NavigationContainer>

@@ -8,7 +8,7 @@ import CustomButton from '../components/CustomButton'
 import Movie from '../models/Movie'
 import RatingInput from '../components/RatingInput';
 
-const CreateMovie = () => {
+const CreateMovie = ({ navigation }) => {
 	const [title, setTitle] = useState(null)
 	const [poster, setPoster] = useState(null)
 	const [summary, setSummary] = useState(null)
@@ -52,6 +52,7 @@ const CreateMovie = () => {
 		try {
 			movies.push(movie)
 			await AsyncStorage.setItem('@movies', JSON.stringify(movies))
+			navigation.navigate('DisplayMovie', { name: movie.title, id : movie.id })
 		} catch (e) {
 			console.log(e)
 		}
