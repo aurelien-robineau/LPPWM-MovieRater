@@ -25,15 +25,18 @@ export default class Movie {
 
 	async save () {
 		const value = await AsyncStorage.getItem('@movies')
-		const movies = value ? JSON.parse(value) : []
+		let movies = value ? JSON.parse(value) : []
 
 		if (this.id === null) {
 			const lastId = (await Movie.getLastId()) + 1
 			this.id = lastId
 			await Movie.setLastId(lastId)
+			movies.push(this)
 		}
-
-		movies.push(this)
+		else {
+			movies = movies.filter(movie => movie.id !== this.id)
+			movies.push(this)
+		}
 		await AsyncStorage.setItem('@movies', JSON.stringify(movies))
 	}
 

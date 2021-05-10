@@ -21,6 +21,11 @@ const DisplayMovie = ({ navigation, route }) => {
 		navigation.navigate('Home')
 	}
 
+	const editMovie = () => {
+		if (movie)
+			navigation.navigate('CreateMovie', { movie })
+	}
+
 	return movie && (
 		<ScrollView>
 			<Image style={styles.poster} source={{ uri: movie.posterURI }} />
@@ -39,6 +44,11 @@ const DisplayMovie = ({ navigation, route }) => {
 				<Text style={styles.value}>{ movie.imdbLink }</Text>
 
 				<View style={styles.controlsContainer}>
+					<CustomButton
+						label="Edit movie"
+						onPress={editMovie}
+					/>
+
 					<CustomButton
 						label="Delete movie"
 						onPress={deleteMovie}

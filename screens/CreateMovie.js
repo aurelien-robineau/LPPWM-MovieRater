@@ -9,13 +9,15 @@ import RatingInput from '../components/RatingInput';
 
 const URL_REGEX = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/
 
-const CreateMovie = ({ navigation }) => {
-	const [title, setTitle] = useState(null)
-	const [poster, setPoster] = useState(null)
-	const [summary, setSummary] = useState(null)
-	const [comments, setComments] = useState(null)
-	const [rating, setRating] = useState(0)
-	const [imdbLink, setImdbLink] = useState(null)
+const CreateMovie = ({ navigation, route }) => {
+	const movie = route.params?.movie ?? null
+
+	const [title, setTitle] = useState(movie?.title ?? null)
+	const [poster, setPoster] = useState(movie?.posterURI ?? null)
+	const [summary, setSummary] = useState(movie?.summary ?? null)
+	const [comments, setComments] = useState(movie?.comments ?? null)
+	const [rating, setRating] = useState(movie?.rating ?? 0)
+	const [imdbLink, setImdbLink] = useState(movie?.imdbLink ?? null)
 	const [errors, setErrors] = useState({})
 
 	const selectPoster = async () => {
@@ -40,17 +42,29 @@ const CreateMovie = ({ navigation }) => {
 			return
 		}
 
-		const movie = new Movie(
-			title,
-			poster,
-			summary,
-			comments,
-			rating,
-			imdbLink
-		)
+		let newMovie = null
+		if (!movie) {
+			newMovie = new Movie(
+				title,
+				poster,
+				summary,
+				comments,
+				rating,
+				imdbLink
+			)
+		}
+		else {
+			movie.title = title
+			movie.poster = poster
+			movie.summary = summary
+			movie.comments = comments
+			movie.rating = rating
+			movie.imdbLink = imdbLink
+			newMovie = movie
+		}
 
-		await movie.save()
-		navigation.navigate('DisplayMovie', { name: movie.title, id : movie.id })
+		await newMovie.save()
+		navigation.navigate('DisplayMovie', { name: newMovie.title, id : newMovie.id })
 	}
 
 	const addErrors = (err) => {
@@ -135,7 +149,7 @@ const CreateMovie = ({ navigation }) => {
 
 			<View style={styles.formGroup}>
 				<Text style={styles.label}>Rating</Text>
-				<RatingInput iconSize={45} onChange={setRating} />
+				<RatingInput iconSize={45} onChange={setRating} value={rating}/>
 				{errors.rating && <Text style={styles.inputError}>{ errors.rating }</Text>}
 			</View>
 
