@@ -1,10 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default class Movie {
-	static lastId = 0
-
 	constructor(title, posterURI, summary, comments, rating, imdbLink, id = null) {
-		this.id        = id === null ? Movie.lastId++ : id
+		this.id        = id ?? null
 		this.title     = title
 		this.posterURI = posterURI
 		this.summary   = summary
@@ -28,6 +26,12 @@ export default class Movie {
 	async save () {
 		const value = await AsyncStorage.getItem('@movies')
 		const movies = value ? JSON.parse(value) : []
+
+		if (this.id === null) {
+			const lastId = (await Movie.getLastId()) + 1
+			this.id = lastId
+			await Movie.setLastId(lastId)
+		}
 
 		movies.push(this)
 		await AsyncStorage.setItem('@movies', JSON.stringify(movies))
@@ -55,5 +59,15 @@ export default class Movie {
 		} catch(e) {
 			return []
 		}
-	} 
+
+		return []
+	}
+
+	static async getLastId() {
+		return (await AsyncStorage.getItem('@lastMovieId')) ?? null
+	}
+
+	static async setLastId(id) {
+		await AsyncStorage.setItem('@lastMovieId', id)
+	}
 }
