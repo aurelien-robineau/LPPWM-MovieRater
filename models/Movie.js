@@ -68,6 +68,6 @@ export default class Movie {
 	}
 
 	static async setLastId(id) {
-		await AsyncStorage.setItem('@lastMovieId', id)
+		await AsyncStorage.setItem('@lastMovieId', Number.toString(id))
 	}
 }

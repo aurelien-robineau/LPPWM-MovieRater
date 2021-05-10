@@ -31,7 +31,6 @@ const CreateMovie = ({ navigation }) => {
 	}
 
 	const saveMovie = async () => {
-		let movies = []
 		const movie = new Movie(
 			title,
 			poster,
