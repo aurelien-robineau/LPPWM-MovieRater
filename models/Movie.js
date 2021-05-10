@@ -37,6 +37,12 @@ export default class Movie {
 		await AsyncStorage.setItem('@movies', JSON.stringify(movies))
 	}
 
+	static async deleteById(id) {
+		const movies = await Movie.getAll()
+		const newMovies = movies.filter(movie => movie.id !== id)
+		await AsyncStorage.setItem('@movies', JSON.stringify(newMovies))
+	}
+
 	static async getById(id) {
 		const value = await AsyncStorage.getItem('@movies')
 		const movies = value ? JSON.parse(value) : []

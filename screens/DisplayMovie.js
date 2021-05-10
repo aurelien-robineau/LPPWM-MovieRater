@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, View, Text, Image } from 'react-native'
+import { StyleSheet, View, Text, Image, ScrollView } from 'react-native'
 
+import CustomButton from '../components/CustomButton'
 import RatingView from '../components/RatingView'
 import Movie from '../models/Movie'
 
-const DisplayMovie = ({ route }) => {
+const DisplayMovie = ({ navigation, route }) => {
 	const [movie, setMovie] = useState(null)
 	
 	useEffect(() => {
@@ -15,8 +16,13 @@ const DisplayMovie = ({ route }) => {
 		setMovie(await Movie.getById(route.params.id))
 	}
 
+	const deleteMovie = async () => {
+		await Movie.deleteById(movie.id)
+		navigation.navigate('Home')
+	}
+
 	return movie && (
-		<View>
+		<ScrollView>
 			<Image style={styles.poster} source={{ uri: movie.posterURI }} />
 
 			<View style={styles.container}>
@@ -31,8 +37,16 @@ const DisplayMovie = ({ route }) => {
 
 				<Text style={styles.label}>IMDB link</Text>
 				<Text style={styles.value}>{ movie.imdbLink }</Text>
+
+				<View style={styles.controlsContainer}>
+					<CustomButton
+						label="Delete movie"
+						onPress={deleteMovie}
+						style={{ backgroundColor: '#ff4a4a' }}
+					/>
+				</View>
 			</View>
-		</View>
+		</ScrollView>
 	)
 }
 
@@ -59,6 +73,12 @@ const styles = StyleSheet.create({
 	value: {
 		fontSize: 18,
 		marginTop: 5
+	},
+
+	controlsContainer: {
+		display: 'flex',
+		alignItems: 'center',
+		marginTop: 20
 	}
 })
 
