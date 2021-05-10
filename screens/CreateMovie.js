@@ -7,6 +7,8 @@ import CustomButton from '../components/CustomButton'
 import Movie from '../models/Movie'
 import RatingInput from '../components/RatingInput';
 
+const URL_REGEX = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/
+
 const CreateMovie = ({ navigation }) => {
 	const [title, setTitle] = useState(null)
 	const [poster, setPoster] = useState(null)
@@ -14,8 +16,7 @@ const CreateMovie = ({ navigation }) => {
 	const [comments, setComments] = useState(null)
 	const [rating, setRating] = useState(0)
 	const [imdbLink, setImdbLink] = useState(null)
-
-	const [posterError, setPosterError] = useState(null)
+	const [errors, setErrors] = useState({})
 
 	const selectPoster = async () => {
 		const res = await DocumentPicker.getDocumentAsync({
@@ -24,13 +25,21 @@ const CreateMovie = ({ navigation }) => {
 
 		if (res.type === 'success') {
 			setPoster(res.uri)
+			removeError('poster')
 		}
 		else if (res.type !== 'cancel') {
-			setPosterError("Can't load the image")
+			addErrors({ poster: "Can't load the image" })
 		}
 	}
 
 	const saveMovie = async () => {
+		const err = getFormErrors()
+
+		if (Object.keys(err).length) {
+			setErrors(getFormErrors())
+			return
+		}
+
 		const movie = new Movie(
 			title,
 			poster,
@@ -44,6 +53,32 @@ const CreateMovie = ({ navigation }) => {
 		navigation.navigate('DisplayMovie', { name: movie.title, id : movie.id })
 	}
 
+	const addErrors = (err) => {
+		setErrors({...errors, ...err})
+	}
+
+	const removeError = (key) => {
+		let newErrors = errors
+		delete newErrors[key]
+
+		setErrors(newErrors)
+	}
+
+	const getFormErrors = () => {
+		const errors = {}
+		const requiredData = { title, poster, summary, rating }
+		
+		for (let key in requiredData) {
+			if (!requiredData[key])
+				errors[key] = 'This field is required'
+		}
+
+		if (imdbLink && !imdbLink.match(URL_REGEX))
+			errors.imdbLink = 'Invalid link'
+
+		return errors
+	}
+
 	return (
 		<ScrollView style={styles.container}>
 			<View style={styles.formGroup}>
@@ -53,6 +88,7 @@ const CreateMovie = ({ navigation }) => {
 					onChangeText={setTitle}
 					value={title}
 				/>
+				{errors.title && <Text style={styles.inputError}>{ errors.title }</Text>}
 			</View>
 
 			<View>
@@ -69,8 +105,8 @@ const CreateMovie = ({ navigation }) => {
 						<Icon name="description" color="black"/>
 					</TouchableOpacity>
 				}
-				{posterError &&
-					<Text style={styles.inputError}>{posterError}</Text>
+				{errors.poster &&
+					<Text style={styles.inputError}>{errors.poster}</Text>
 				}
 			</View>
 
@@ -83,6 +119,7 @@ const CreateMovie = ({ navigation }) => {
 					numberOfLines={5}
 					multiline
 				/>
+				{errors.summary && <Text style={styles.inputError}>{ errors.summary }</Text>}
 			</View>
 
 			<View style={styles.formGroup}>
@@ -99,6 +136,7 @@ const CreateMovie = ({ navigation }) => {
 			<View style={styles.formGroup}>
 				<Text style={styles.label}>Rating</Text>
 				<RatingInput iconSize={45} onChange={setRating} />
+				{errors.rating && <Text style={styles.inputError}>{ errors.rating }</Text>}
 			</View>
 
 			<View style={styles.formGroup}>
@@ -108,6 +146,7 @@ const CreateMovie = ({ navigation }) => {
 					onChangeText={setImdbLink}
 					value={imdbLink}
 				/>
+				{errors.imdbLink && <Text style={styles.inputError}>{ errors.imdbLink }</Text>}
 			</View>
 
 			<View style={styles.createButtonContainer}>
