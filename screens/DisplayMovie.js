@@ -37,20 +37,20 @@ const DisplayMovie = ({ navigation, route }) => {
 
 				<Text style={styles.value}>{ movie.summary }</Text>
 
-				<Text style={styles.label}>My comments</Text>
+				<Text style={styles.label}>Mes commentaires</Text>
 				<Text style={styles.value}>{ movie.comments }</Text>
 
-				<Text style={styles.label}>IMDB link</Text>
+				<Text style={styles.label}>Lien IMDB</Text>
 				<Text style={styles.value}>{ movie.imdbLink }</Text>
 
 				<View style={styles.controlsContainer}>
 					<CustomButton
-						label="Edit movie"
+						label="Modifier"
 						onPress={editMovie}
 					/>
 
 					<CustomButton
-						label="Delete movie"
+						label="Supprimer"
 						onPress={deleteMovie}
 						style={{ backgroundColor: '#ff4a4a' }}
 					/>

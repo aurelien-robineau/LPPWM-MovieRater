@@ -17,12 +17,12 @@ const App = () => {
 				<Stack.Screen
 					name="Home"
 					component={MoviesList}
-					options={{ title: 'My movies' }}
+					options={{ title: 'Mes films' }}
 				/>
 				<Stack.Screen
 					name="CreateMovie"
 					component={CreateMovie}
-					options={{ title: 'New movie' }}
+					options={{ title: 'Nouveau film' }}
 				/>
 				<Stack.Screen
 					name="DisplayMovie"

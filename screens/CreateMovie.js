@@ -30,7 +30,7 @@ const CreateMovie = ({ navigation, route }) => {
 			removeError('poster')
 		}
 		else if (res.type !== 'cancel') {
-			addErrors({ poster: "Can't load the image" })
+			addErrors({ poster: "Impossible de charger l'image" })
 		}
 	}
 
@@ -84,11 +84,11 @@ const CreateMovie = ({ navigation, route }) => {
 		
 		for (let key in requiredData) {
 			if (!requiredData[key])
-				errors[key] = 'This field is required'
+				errors[key] = "Champs obligatoire"
 		}
 
 		if (imdbLink && !imdbLink.match(URL_REGEX))
-			errors.imdbLink = 'Invalid link'
+			errors.imdbLink = 'Lien invalide'
 
 		return errors
 	}
@@ -96,7 +96,7 @@ const CreateMovie = ({ navigation, route }) => {
 	return (
 		<ScrollView style={styles.container}>
 			<View style={styles.formGroup}>
-				<Text style={styles.label}>Title</Text>
+				<Text style={styles.label}>Titre</Text>
 				<TextInput
 					style={styles.input}
 					onChangeText={setTitle}
@@ -106,7 +106,7 @@ const CreateMovie = ({ navigation, route }) => {
 			</View>
 
 			<View>
-				<Text style={styles.label}>Poster image</Text>
+				<Text style={styles.label}>Affiche</Text>
 				{poster ?
 					<TouchableOpacity onPress={selectPoster}>
 						<Image style={styles.poster} source={{ uri: poster }} />
@@ -125,7 +125,7 @@ const CreateMovie = ({ navigation, route }) => {
 			</View>
 
 			<View style={styles.formGroup}>
-				<Text style={styles.label}>Summary</Text>
+				<Text style={styles.label}>Résumé</Text>
 				<TextInput
 					style={styles.input}
 					onChangeText={setSummary}
@@ -137,7 +137,7 @@ const CreateMovie = ({ navigation, route }) => {
 			</View>
 
 			<View style={styles.formGroup}>
-				<Text style={styles.label}>Comments</Text>
+				<Text style={styles.label}>Commentaires</Text>
 				<TextInput
 					style={styles.input}
 					onChangeText={setComments}
@@ -148,13 +148,13 @@ const CreateMovie = ({ navigation, route }) => {
 			</View>
 
 			<View style={styles.formGroup}>
-				<Text style={styles.label}>Rating</Text>
+				<Text style={styles.label}>Note</Text>
 				<RatingInput iconSize={45} onChange={setRating} value={rating}/>
 				{errors.rating && <Text style={styles.inputError}>{ errors.rating }</Text>}
 			</View>
 
 			<View style={styles.formGroup}>
-				<Text style={styles.label}>IMDB link</Text>
+				<Text style={styles.label}>Lien IMDB</Text>
 				<TextInput
 					style={styles.input}
 					onChangeText={setImdbLink}
@@ -165,7 +165,7 @@ const CreateMovie = ({ navigation, route }) => {
 
 			<View style={styles.createButtonContainer}>
 				<CustomButton
-					label="Create"
+					label={movie ? 'Enregistrer' : 'Créer'}
 					onPress={saveMovie}
 				/>
 			</View>

@@ -45,10 +45,10 @@ const MoviesList = ({ navigation }) => {
 				:
 				<View style={styles.noMoviesContainer}>
 					<Text style={styles.noMoviesText}>
-						No movies yet...
+						Pas de films...
 					</Text>
 					<CustomButton
-						label="Create one"
+						label="En créer un"
 						onPress={() => navigation.navigate('CreateMovie')}
 					/>
 				</View>
