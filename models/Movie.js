@@ -1,3 +1,5 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
 export default class Movie {
 	static lastId = 0
 
@@ -22,4 +24,36 @@ export default class Movie {
 			JSON.id
 		)
 	}
+
+	async save () {
+		const value = await AsyncStorage.getItem('@movies')
+		const movies = value ? JSON.parse(value) : []
+
+		movies.push(this)
+		await AsyncStorage.setItem('@movies', JSON.stringify(movies))
+	}
+
+	static async getById(id) {
+		const value = await AsyncStorage.getItem('@movies')
+		const movies = value ? JSON.parse(value) : []
+
+		const JSONMovie = movies.filter(movie => movie.id === id)[0] ?? null
+
+		if (JSONMovie) {
+			return Movie.createFromJSON(JSONMovie)
+		}
+
+		return null
+	}
+
+	static async getAll() {
+		try {
+			const value = await AsyncStorage.getItem('@movies')
+			if (value) {
+				return JSON.parse(value).map(movie => Movie.createFromJSON(movie))
+			}
+		} catch(e) {
+			return []
+		}
+	} 
 }

@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { StyleSheet, View, TextInput, Text, ScrollView, TouchableOpacity, Image } from 'react-native'
 import { Icon } from 'react-native-elements'
 import * as DocumentPicker from 'expo-document-picker';
-import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import CustomButton from '../components/CustomButton'
 import Movie from '../models/Movie'
@@ -42,20 +41,8 @@ const CreateMovie = ({ navigation }) => {
 			imdbLink
 		)
 
-		try {
-			const value = await AsyncStorage.getItem('@movies')
-			movies = value ? JSON.parse(value) : []
-		} catch(e) {
-			movies = []
-		}
-
-		try {
-			movies.push(movie)
-			await AsyncStorage.setItem('@movies', JSON.stringify(movies))
-			navigation.navigate('DisplayMovie', { name: movie.title, id : movie.id })
-		} catch (e) {
-			console.log(e)
-		}
+		await movie.save()
+		navigation.navigate('DisplayMovie', { name: movie.title, id : movie.id })
 	}
 
 	return (

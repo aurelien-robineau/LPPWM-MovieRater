@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, FlatList, SafeAreaView, Text, TouchableOpacity, View, StatusBar, Dimensions } from 'react-native'
 import { Icon } from 'react-native-elements'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import MovieCard from '../components/MovieCard'
 import Movie from '../models/Movie'
@@ -11,19 +10,12 @@ const MoviesList = ({ navigation }) => {
 	const [movies, setMovies] = useState([])
 
 	useEffect(() => {
-		const loadMovies = async () => {
-			try {
-				const value = await AsyncStorage.getItem('@movies')
-				if (value) {
-					setMovies(JSON.parse(value).map(movie => Movie.createFromJSON(movie)))
-				}
-			} catch(e) {
-				setMovies([])
-			}
-		}
-
 		loadMovies()
 	}, [])
+
+	const loadMovies = async () => {
+		setMovies(await Movie.getAll())
+	}
 
 	const renderMovie = ({ item }) => {
 		return (
