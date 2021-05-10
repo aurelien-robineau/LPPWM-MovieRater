@@ -64,10 +64,11 @@ export default class Movie {
 	}
 
 	static async getLastId() {
-		return (await AsyncStorage.getItem('@lastMovieId')) ?? null
+		const lastId = (await AsyncStorage.getItem('@lastMovieId')) ?? null
+		return lastId ? Number.parseInt(lastId) : 0
 	}
 
 	static async setLastId(id) {
-		await AsyncStorage.setItem('@lastMovieId', Number.toString(id))
+		await AsyncStorage.setItem('@lastMovieId', id.toString())
 	}
 }
