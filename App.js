@@ -1,6 +1,8 @@
 import React from 'react'
+import { TouchableOpacity } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
+import { Icon } from 'react-native-elements'
 
 import MoviesList from './screens/MoviesList'
 import CreateMovie from './screens/CreateMovie'
@@ -25,7 +27,19 @@ const App = () => {
 				<Stack.Screen
 					name="DisplayMovie"
 					component={DisplayMovie}
-					options={({ route }) => ({ title: route.params.name })}
+					options={({ navigation, route }) => ({
+						title: route.params.name,
+						headerLeft: () => (
+							<TouchableOpacity onPress={() => navigation.navigate('Home')}>
+								<Icon
+									name="arrow-back"
+									size={24}
+									color='black'
+									style={{ marginLeft: 14 }}
+								/>
+							</TouchableOpacity>
+						)
+					})}
 				/>
 			</Stack.Navigator>
 		</NavigationContainer>

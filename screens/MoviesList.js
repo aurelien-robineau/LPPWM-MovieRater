@@ -13,6 +13,14 @@ const MoviesList = ({ navigation }) => {
 		loadMovies()
 	}, [])
 
+	useEffect(() => {
+		const unsubscribe = navigation.addListener('focus', () => {
+			loadMovies()
+		})
+
+		return unsubscribe
+	}, [navigation])
+
 	const loadMovies = async () => {
 		setMovies(await Movie.getAll())
 	}
